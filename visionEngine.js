@@ -60,38 +60,22 @@ const VisionEngine = {
           imageSrc: base64Data,
           engine: "Live Vercel Serverless Vision Engine (Gemini Flash)"
         };
-      } else if (response.status !== 404) {
-        // If the serverless endpoint returned an actual error (e.g. key expired), parse it
+      } else {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP ${response.status}`);
+        console.warn(`Serverless API returned error status ${response.status}:`, errorData.error);
       }
     } catch (err) {
-      // If the endpoint is not present (404 / local static server) fall through, else bubble up
-      if (err.message && !err.message.includes("404") && !err.message.includes("not found")) {
-        throw err;
-      }
+      console.warn("Serverless endpoint failed or not detected:", err);
     }
 
-    // 2. Direct Fallback: Client-side fetch query (for local python static server dev environments)
-    console.warn("Vercel Serverless API endpoint not detected. Falling back to secure client-side direct API query.");
-    const directResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`,
-        "HTTP-Referer": "https://dseinsightpro.com",
-        "X-Title": "DSE Insight Pro"
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: `You are a professional financial technical analyst. Analyze this Dhaka Stock Exchange (DSE) stock chart screenshot. Identify:
+    // 2. Direct Fallback: Client-side fetch query (for local dev or when Vercel env key is not configured)
+    if (!apiKey) {
+      throw new Error("API Key is not configured (neither on Vercel environment variables nor in the client settings).");
+    }
+
+    console.log("Using client-side direct API query with the provided API key.");
+    const isGoogleKey = apiKey.startsWith("AIzaSy");
+    const promptText = `You are a professional financial technical analyst. Analyze this Dhaka Stock Exchange (DSE) stock chart screenshot. Identify:
 1. Stock Ticker or Company name (must match a DSE stock or represent a real stock on DSE).
 2. Current price trend and patterns.
 3. Key technical indicators visible (RSI, MACD, Moving Averages, etc.) and their values.
@@ -128,34 +112,97 @@ You MUST respond strictly in a valid JSON object structure like this:
     "outlook": "Outlook summary in English.",
     "outlookBn": "Outlook summary in Bengali."
   }
-}`
-              },
-              {
-                type: "image_url",
-                image_url: {
-                  url: base64Data
+}`;
+
+    if (isGoogleKey) {
+      const base64Image = base64Data.split(",")[1] || base64Data;
+      const mimeType = base64Data.split(";")[0].split(":")[1] || "image/jpeg";
+
+      const directResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: promptText },
+                {
+                  inlineData: {
+                    mimeType: mimeType,
+                    data: base64Image
+                  }
                 }
-              }
-            ]
+              ]
+            }
+          ],
+          generationConfig: {
+            responseMimeType: "application/json"
           }
-        ]
-      })
-    });
+        })
+      });
 
-    if (!directResponse.ok) {
-      const errorText = await directResponse.text();
-      throw new Error(`Direct API Error: ${errorText}`);
+      if (!directResponse.ok) {
+        const errorText = await directResponse.text();
+        throw new Error(`Direct Google Gemini API Error: ${errorText}`);
+      }
+
+      const data = await directResponse.json();
+      const contentText = data.candidates[0].content.parts[0].text;
+      const parsed = JSON.parse(contentText);
+      return {
+        ...parsed,
+        imageSrc: base64Data,
+        engine: "Live Client-Side Gemini Vision Engine (Direct Gemini Flash)"
+      };
+    } else {
+      const directResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
+          "HTTP-Referer": "https://dseinsightpro.com",
+          "X-Title": "DSE Insight Pro"
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          response_format: { type: "json_object" },
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "text",
+                  text: promptText
+                },
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: base64Data
+                  }
+                }
+              ]
+            }
+          ]
+        })
+      });
+
+      if (!directResponse.ok) {
+        const errorText = await directResponse.text();
+        throw new Error(`Direct OpenRouter API Error: ${errorText}`);
+      }
+
+      const data = await directResponse.json();
+      const content = data.choices[0].message.content;
+      const parsed = JSON.parse(content);
+      
+      return {
+        ...parsed,
+        imageSrc: base64Data,
+        engine: "Live Client-Side OpenRouter Vision Engine (Gemini Flash)"
+      };
     }
-
-    const data = await directResponse.json();
-    const content = data.choices[0].message.content;
-    const parsed = JSON.parse(content);
-    
-    return {
-      ...parsed,
-      imageSrc: base64Data,
-      engine: "Live Client-Side Vision Engine (Gemini Flash Fallback)"
-    };
   },
 
   // Simulated AI scanner that runs client-side
