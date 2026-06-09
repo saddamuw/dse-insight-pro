@@ -1,0 +1,261 @@
+// DSE Insight Pro - PDF Exporter Utility
+const PDFExporter = {
+  // Compile analysis data and trigger standard print dialog optimized via Print CSS
+  exportReport(analysisData) {
+    if (!analysisData) {
+      alert("No active scan data to export.");
+      return;
+    }
+
+    // Dynamic compilation of the print report template
+    const printWindow = window.open("", "_blank");
+    
+    // Inject styles and html structure
+    const dateStr = new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" });
+    
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>DSE Insight Pro - Technical Report: ${analysisData.ticker}</title>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+          body {
+            font-family: 'Inter', sans-serif;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 30px;
+            background: #ffffff;
+            line-height: 1.5;
+          }
+          .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #0052cc;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+          }
+          .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+          .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0052cc;
+            letter-spacing: -0.5px;
+          }
+          .logo-badge {
+            background: #0052cc;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+          }
+          .meta-info {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+          }
+          .report-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            background: #f4f6fa;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border-left: 4px solid #0052cc;
+          }
+          .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+          }
+          .card {
+            border: 1px solid #e1e4ea;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fafbfc;
+          }
+          .card h3 {
+            margin-top: 0;
+            font-size: 14px;
+            color: #0052cc;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e1e4ea;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+          }
+          .card p {
+            margin: 6px 0;
+            font-size: 13px;
+          }
+          .indicator-val {
+            font-weight: 600;
+            color: #333;
+          }
+          .screenshot-box {
+            text-align: center;
+            border: 1px solid #e1e4ea;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 25px;
+            background: #fafbfc;
+          }
+          .screenshot-box img {
+            max-width: 100%;
+            max-height: 350px;
+            border-radius: 4px;
+            object-fit: contain;
+          }
+          .section {
+            margin-bottom: 25px;
+          }
+          .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+          }
+          .highlight {
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 15px;
+          }
+          .highlight.bullish {
+            background: #e6f7ed;
+            border-left: 4px solid #28a745;
+            color: #155724;
+          }
+          .highlight.bearish {
+            background: #fdf2f2;
+            border-left: 4px solid #dc3545;
+            color: #721c24;
+          }
+          .highlight.neutral {
+            background: #f8f9fa;
+            border-left: 4px solid #6c757d;
+            color: #383d41;
+          }
+          .footer {
+            margin-top: 40px;
+            border-top: 1px solid #e1e4ea;
+            padding-top: 15px;
+            text-align: center;
+            font-size: 11px;
+            color: #888;
+          }
+          @media print {
+            body {
+              padding: 0;
+            }
+            .no-print {
+              display: none;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo-area">
+            <span class="logo-text">DSE Insight Pro</span>
+            <span class="logo-badge">Premium Technical Report</span>
+          </div>
+          <div class="meta-info">
+            Generated: ${dateStr} (BST)<br>
+            Engine: ${analysisData.engine || "Standard Vision Model"}
+          </div>
+        </div>
+
+        <div class="report-title">
+          Technical Analysis Report: <strong>${analysisData.ticker}</strong> (${analysisData.name})
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <h3>Security Overview / সিকিউরিটি বিবরণী</h3>
+            <p><strong>Ticker:</strong> ${analysisData.ticker}</p>
+            <p><strong>Name:</strong> ${analysisData.name}</p>
+            <p><strong>Source Platform:</strong> ${analysisData.platform}</p>
+            <p><strong>Detected Indicators:</strong> ${analysisData.indicators ? analysisData.indicators.join(', ') : 'None'}</p>
+          </div>
+          <div class="card">
+            <h3>Technical Outlook / টেকনিক্যাল আউটলুক</h3>
+            <div class="highlight ${analysisData.analysis.outlook.toLowerCase().includes('bullish') ? 'bullish' : analysisData.analysis.outlook.toLowerCase().includes('bearish') ? 'bearish' : 'neutral'}">
+              <strong>Sentiment / অনুভূতি:</strong> ${analysisData.analysis.trend}
+              ${analysisData.analysis.trendBn ? `<div style="font-size:11px; margin-top:2px; font-weight:normal; opacity:0.85;">${analysisData.analysis.trendBn}</div>` : ''}
+            </div>
+            <p><strong>Support:</strong> <span class="indicator-val">${analysisData.analysis.supportResistance.support}</span>
+              ${analysisData.analysis.supportResistance.supportBn ? `<br><span style="font-size:11px; color:#555; font-style:italic;">${analysisData.analysis.supportResistance.supportBn}</span>` : ''}
+            </p>
+            <p><strong>Resistance:</strong> <span class="indicator-val">${analysisData.analysis.supportResistance.resistance}</span>
+              ${analysisData.analysis.supportResistance.resistanceBn ? `<br><span style="font-size:11px; color:#555; font-style:italic;">${analysisData.analysis.supportResistance.resistanceBn}</span>` : ''}
+            </p>
+          </div>
+        </div>
+
+        <div class="screenshot-box">
+          <div style="font-size: 11px; color: #777; margin-bottom: 8px;">Analyzed Chart Screenshot / স্ক্যানকৃত চার্ট স্ক্রিনশট</div>
+          <img src="${analysisData.imageSrc}" alt="Uploaded Stock Chart">
+        </div>
+
+        <div class="section">
+          <div class="section-title">Deep Technical Breakdown / গভীর টেকনিক্যাল বিশ্লেষণ</div>
+          <p><strong>Trend Analysis / মূল্য প্রবণতা বিশ্লেষণ:</strong><br>
+            ${analysisData.analysis.trend}
+            ${analysisData.analysis.trendBn ? `<br><span style="font-size:12px; color:#555; font-style:italic;">${analysisData.analysis.trendBn}</span>` : ''}
+          </p>
+          
+          <p style="margin-top:12px;"><strong>RSI Interpretation / আরএসআই বিশ্লেষণ:</strong><br>
+            RSI value detected at <span class="indicator-val">${analysisData.analysis.rsi.value}</span>. ${analysisData.analysis.rsi.interpretation}
+            ${analysisData.analysis.rsi.interpretationBn ? `<br><span style="font-size:12px; color:#555; font-style:italic;">${analysisData.analysis.rsi.interpretationBn}</span>` : ''}
+          </p>
+          
+          <p style="margin-top:12px;"><strong>MACD Indicator / এমএসিডি সূচক:</strong><br>
+            Detected state: <span class="indicator-val">${analysisData.analysis.macd.value}</span>. ${analysisData.analysis.macd.interpretation}
+            ${analysisData.analysis.macd.interpretationBn ? `<br><span style="font-size:12px; color:#555; font-style:italic;">${analysisData.analysis.macd.interpretationBn}</span>` : ''}
+          </p>
+          
+          <p style="margin-top:12px;"><strong>Candlestick Formation / ক্যান্ডেলস্টিক প্যাটার্ন:</strong><br>
+            ${analysisData.analysis.candlestickPattern}
+            ${analysisData.analysis.candlestickPatternBn ? `<br><span style="font-size:12px; color:#555; font-style:italic;">${analysisData.analysis.candlestickPatternBn}</span>` : ''}
+          </p>
+        </div>
+
+        <div class="section" style="page-break-inside: avoid;">
+          <div class="section-title">Strategic Outlook & Warning Levels / স্ট্র্যাটেজিক আউটলুক ও সতর্কবার্তা</div>
+          <p>
+            ${analysisData.analysis.outlook}
+            ${analysisData.analysis.outlookBn ? `<br><span style="font-size:12px; color:#555; font-style:italic;">${analysisData.analysis.outlookBn}</span>` : ''}
+          </p>
+        </div>
+
+        <div class="footer">
+          DSE Insight Pro &copy; 2026. This report is for educational and analytical purposes only. Trading in the Dhaka Stock Exchange involves high risk. Consult a registered financial analyst before investing.
+        </div>
+
+        <script>
+          // Auto trigger print and close window after completion
+          window.onload = function() {
+            setTimeout(function() {
+              window.print();
+            }, 500);
+          }
+        </script>
+      </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
+  }
+};

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSE Insight Pro - AI stock Chart Screenshot Analyst</title>
+  
+  <!-- Styling -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- App Header -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">D</div>
+      <div class="logo-text">
+        <h1>DSE Insight Pro</h1>
+        <p>AI TECHNICAL SCREENSHOT ANALYST</p>
+      </div>
+    </div>
+    
+    <div class="header-actions">
+      <!-- Active Subscription Badge -->
+      <span id="premium-status-badge" class="status-badge free">Free Tier</span>
+      
+      <!-- Upgrade Action Button -->
+      <button id="upgrade-cta-btn" class="btn-upgrade">
+        <i data-lucide="zap"></i> Upgrade to Premium
+      </button>
+      
+      <!-- Scan Counter Badge (Useful diagnostic review) -->
+      <span id="scan-count-badge" style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Scans: 0/3</span>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main>
+    
+    <!-- SECTION 1: UPLOAD SCREEN -->
+    <div id="upload-screen">
+      <div class="welcome-header">
+        <h2>Stock Chart AI Technical Scanner</h2>
+        <p>Upload a DSE chart screenshot from StockNow, AmarStock, DSE, or TradingView to generate automated technical analyses & explanations.</p>
+      </div>
+
+      <div class="upload-wrapper">
+        <!-- Interactive Dropzone -->
+        <div id="dropzone" class="dropzone-container">
+          <input type="file" id="file-input" class="file-input" accept="image/*">
+          <div class="upload-icon-container">
+            <i data-lucide="cloud-upload" style="width: 54px; height: 54px;"></i>
+          </div>
+          <h3>Drag and drop stock chart screenshot here</h3>
+          <p>Supports PNG, JPG, JPEG. (Screenshots from StockNow, AmarStock, DSE Portal, etc.)</p>
+          <button class="btn-select">Select File from Device</button>
+          
+          <!-- Scan Limit Counter Progress Bar -->
+          <div class="counter-box">
+            <span id="free-scans-left" class="counter-text">3 of 3 free scans remaining</span>
+            <div class="counter-bar-bg">
+              <div id="scan-counter-progress" class="counter-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Config Panel (Real vs Mock Vision toggle) -->
+      <div class="ai-config-panel">
+        <div class="toggle-container">
+          <div class="toggle-label">
+            <h4>Live AI Vision Scan</h4>
+            <p>Connect with OpenRouter (Gemini 2.5) for real-world chart screenshot interpretation.</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-real-ai">
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div id="api-key-container" class="api-key-container">
+          <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600;">OpenRouter API Key (Pre-configured from replit.docx)</label>
+          <input type="password" id="api-key-input" placeholder="Enter sk-or-v1-...">
+        </div>
+      </div>
+
+      <!-- Quick Test Gallery (Clickable assets) -->
+      <div class="gallery-section">
+        <div class="gallery-section-header">
+          <h3>Try Sample DSE Screenshots</h3>
+          <p>Click any copied screenshot below to simulate uploading and analyze it instantly!</p>
+        </div>
+        <div id="sample-gallery" class="sample-gallery">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: SCANNING INTERMEDIATE SCREEN -->
+    <div id="scanning-screen" class="scanning-screen-container card-base">
+      <div class="scan-animation-box">
+        <div class="scan-grid"></div>
+        <div class="scan-line"></div>
+        <i data-lucide="cpu" class="scan-icon" style="width: 48px; height: 48px;"></i>
+      </div>
+      <h3>Extracting Chart Features...</h3>
+      <p>AI Engine is analyzing candlestick trends, technical overlays, support boundaries, and volume patterns.</p>
+    </div>
+
+    <!-- SECTION 3: SCAN RESULTS DASHBOARD -->
+    <div id="results-screen" class="results-screen-container">
+      
+      <!-- Top Action Bar -->
+      <div class="results-action-bar">
+        <button id="scan-new-btn" class="btn-secondary">
+          <i data-lucide="arrow-left"></i> Analyze Another Screenshot
+        </button>
+        
+        <button id="export-pdf-btn" class="btn-primary">
+          <i data-lucide="file-text"></i> Export PDF Report (Premium)
+        </button>
+      </div>
+
+      <!-- Report Layout -->
+      <div class="results-grid">
+        
+        <!-- Left Column: Uploaded Image & Indicators List -->
+        <div class="chart-display-card card-base">
+          <div class="ticker-header-card">
+            <div class="ticker-badge-row">
+              <span id="result-ticker" class="ticker-badge">TICKER</span>
+              <span id="result-platform" class="platform-badge">StockNow</span>
+            </div>
+            <h2 id="result-name" class="stock-name-title">Company Name PLC</h2>
+          </div>
+
+          <!-- Original screenshot display -->
+          <div class="img-preview-box">
+            <img id="analyzed-img" src="" alt="Analyzed DSE Chart">
+          </div>
+
+          <!-- Interactive technical indicators for learning -->
+          <div class="indicators-edu-box">
+            <h4>Detected Indicators (Click to Learn)</h4>
+            <div id="indicators-list" class="indicators-list">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: AI Analysis Report -->
+        <div class="analysis-report-card card-base">
+          <div class="report-section-header">
+            <span id="engine-badge" class="engine-badge">Local Engine</span>
+            <h3><i data-lucide="bar-chart-2"></i> Technical Report / টেকনিক্যাল অ্যানালাইসিস</h3>
+          </div>
+
+          <!-- Trend Highlight -->
+          <div class="trend-highlight-box">
+            <strong>Price Action Trend / মূল্য প্রবণতা</strong>
+            <span id="result-trend">Consolidating along support.</span>
+          </div>
+
+          <!-- Deep Metrics -->
+          <div class="report-details-board">
+            
+            <!-- Support & Resistance -->
+            <div class="detail-item">
+              <div class="detail-header">
+                <span>Support & Resistance / সাপোর্ট ও রেজিস্ট্যান্স লেভেল</span>
+                <span class="metric-pill">Key Zones</span>
+              </div>
+              <div class="detail-body">
+                <div class="levels-grid">
+                  <div class="level-card support">
+                    <div class="label">Primary Support / প্রধান সাপোর্ট</div>
+                    <div id="result-support" class="value">BDT 0.00</div>
+                  </div>
+                  <div class="level-card resistance">
+                    <div class="label">Primary Resistance / প্রধান রেজিস্ট্যান্স</div>
+                    <div id="result-resistance" class="value">BDT 0.00</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RSI -->
+            <div class="detail-item">
+              <div class="detail-header">
+                <span>Relative Strength Index (RSI) / আরএসআই</span>
+                <span class="metric-pill">Value: <span id="result-rsi-val">0.0</span></span>
+              </div>
+              <div id="result-rsi-interpretation" class="detail-body">
+                RSI analysis description...
+              </div>
+            </div>
+
+            <!-- MACD -->
+            <div class="detail-item">
+              <div class="detail-header">
+                <span>MACD (12, 26, 9) / এমএসিডি</span>
+                <span class="metric-pill">MACD: <span id="result-macd-val">0.0</span></span>
+              </div>
+              <div id="result-macd-interpretation" class="detail-body">
+                MACD crossover status...
+              </div>
+            </div>
+
+            <!-- Candlestick Formation -->
+            <div class="detail-item">
+              <div class="detail-header">
+                <span>Candlestick Formation / ক্যান্ডেলস্টিক প্যাটার্ন</span>
+                <span class="metric-pill">Pattern</span>
+              </div>
+              <div id="result-pattern" class="detail-body">
+                Hammer pattern observed at support line...
+              </div>
+            </div>
+
+            <!-- Strategic Outlook -->
+            <div class="detail-item" style="border-top: 1px solid var(--border-color); padding-top: 15px;">
+              <div class="detail-header">
+                <span style="color: var(--accent-gold); font-weight: 700;">Strategic Actionable Outlook / স্ট্র্যাটেজিক আউটলুক</span>
+                <span class="metric-pill" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-gold);">Pro Recommendation</span>
+              </div>
+              <div id="result-outlook" class="detail-body" style="font-weight: 500;">
+                Accumulate shares near the dynamic support, watch next levels.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- AUTHENTICATION & MANUAL PAYMENT MODAL -->
+  <div id="paywall-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 600px;">
+      <button id="close-paywall" class="modal-close"><i data-lucide="x"></i></button>
+      
+      <!-- STEP 1: REGISTRATION VIEW -->
+      <div id="auth-register-view">
+        <div class="paywall-header">
+          <div class="paywall-crown"><i data-lucide="user-plus"></i></div>
+          <h2>Create Your Account</h2>
+          <p>Please register to unlock further features. Investors from our 7,000 pre-approved database get instant access!</p>
+        </div>
+        
+        <form id="register-form" onsubmit="event.preventDefault();" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+          <input type="text" id="reg-name" placeholder="Full Name (e.g. Tanvir Rahman)" required style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #1e293b; border: 1px solid var(--border-color); color: #fff;">
+          
+          <input type="email" id="reg-email" placeholder="Email Address (e.g. info@dse.com)" required style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #1e293b; border: 1px solid var(--border-color); color: #fff;">
+          
+          <input type="text" id="reg-phone" placeholder="Phone Number (e.g. 017XXXXXXXX)" required style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #1e293b; border: 1px solid var(--border-color); color: #fff;">
+          
+          <input type="password" id="reg-password" placeholder="Create Password" required style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #1e293b; border: 1px solid var(--border-color); color: #fff;">
+          
+          <button type="submit" id="btn-submit-register" class="btn-primary" style="justify-content: center; width: 100%; padding: 12px;">Sign Up & Continue</button>
+        </form>
+        <div style="text-align: center; font-size: 13px; color: var(--text-muted);">
+          Already have an account? <a href="#" id="toggle-to-login" style="color: #60a5fa; text-decoration: none; font-weight: 600;">Log In</a>
+        </div>
+      </div>
+
+      <!-- STEP 2: LOGIN VIEW -->
+      <div id="auth-login-view" style="display: none;">
+        <div class="paywall-header">
+          <div class="paywall-crown"><i data-lucide="log-in"></i></div>
+          <h2>Log In to DSE Insight Pro</h2>
+          <p>Access your technical scan dashboard and configurations.</p>
+        </div>
+        
+        <form id="login-form" onsubmit="event.preventDefault();" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
+          <input type="text" id="login-identifier" placeholder="Email Address or Phone Number" required style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #1e293b; border: 1px solid var(--border-color); color: #fff;">
+          
+          <input type="password" id="login-password" placeholder="Enter Password" required style="width: 100%; padding: 10px 14px; border-radius: 8px; background: #1e293b; border: 1px solid var(--border-color); color: #fff;">
+          
+          <button type="submit" id="btn-submit-login" class="btn-primary" style="justify-content: center; width: 100%; padding: 12px;">Log In</button>
+        </form>
+        <div style="text-align: center; font-size: 13px; color: var(--text-muted);">
+          Don't have an account yet? <a href="#" id="toggle-to-register" style="color: #60a5fa; text-decoration: none; font-weight: 600;">Register Now</a>
+        </div>
+      </div>
+
+      <!-- STEP 3: MANUAL PAYMENT SELECTION & REFERENCE SUBMISSION -->
+      <div id="payment-portal-view" style="display: none;">
+        <div class="paywall-header">
+          <div class="paywall-crown"><i data-lucide="credit-card" style="color: var(--accent-gold);"></i></div>
+          <h2>Activate Premium Access</h2>
+          <p>Please purchase a package to continue. Submit payment details below for manual approval.</p>
+        </div>
+
+        <!-- Payment instructions -->
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px; font-size: 13px; line-height: 1.55;">
+          <div style="font-weight: 700; color: var(--accent-gold); margin-bottom: 6px; display: flex; align-items: center; gap: 5px;">
+            <i data-lucide="smartphone"></i> Option 1: Pay via bKash (Personal)
+          </div>
+          <div>Send BDT <strong>499</strong> (Monthly) or BDT <strong>3,999</strong> (Yearly) to our wallet:</div>
+          <div style="font-family: monospace; font-size: 16px; font-weight: 700; color: #fff; margin: 4px 0; background: #0f172a; padding: 4px 10px; border-radius: 4px; display: inline-block; border: 1px solid rgba(255,255,255,0.05);">01712-345678 (Personal - Send Money)</div>
+          
+          <div style="font-weight: 700; color: #38bdf8; margin: 12px 0 6px 0; display: flex; align-items: center; gap: 5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+            <i data-lucide="landmark"></i> Option 2: Bank Transfer
+          </div>
+          <div>Bank Name: City Bank PLC | A/C: <strong>1102938472012</strong> | Branch: Gulshan</div>
+        </div>
+
+        <!-- Reference Submission form -->
+        <form id="payment-submission-form" onsubmit="event.preventDefault();" style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+              <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Choose Package</label>
+              <select id="pay-package" style="width: 100%; padding: 10px; border-radius: 8px; background: #1e293b; border: 1px solid var(--border-color); color: #fff;">
+                <option value="499">Monthly Access - BDT 499</option>
+                <option value="3999">Yearly Access - BDT 3,999</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Payment Method</label>
+              <select id="pay-method" style="width: 100%; padding: 10px; border-radius: 8px; background: #1e293b; border: 1px solid var(--border-color); color: #fff;">
+                <option value="bkash">bKash Mobile Wallet</option>
+                <option value="bank">Bank Transfer</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+              <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Sender Mobile / Account</label>
+              <input type="text" id="pay-sender" placeholder="e.g. 017XXXXXXXX" required style="width: 100%; padding: 10px; border-radius: 8px; background: #1e293b; border: 1px solid var(--border-color); color: #fff;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Transaction ID / TrxID</label>
+              <input type="text" id="pay-reference" placeholder="e.g. BK8D3K29S9" required style="width: 100%; padding: 10px; border-radius: 8px; background: #1e293b; border: 1px solid var(--border-color); color: #fff;">
+            </div>
+          </div>
+
+          <button type="submit" id="btn-submit-payment" class="btn-primary" style="justify-content: center; width: 100%; padding: 12px; margin-top: 5px;">Submit Payment for Review</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EDUCATIONAL DETAILS MODAL -->
+  <div id="edu-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button id="close-edu" class="modal-close"><i data-lucide="x"></i></button>
+      
+      <div class="edu-header">
+        <h2 id="edu-title">Relative Strength Index (RSI)</h2>
+      </div>
+
+      <div class="edu-desc-box">
+        <h4>Indicator Definition</h4>
+        <p id="edu-desc">RSI is a momentum oscillator that measures...</p>
+      </div>
+
+      <div class="edu-signals-box">
+        <div class="signal-card bullish">
+          <h4>Bullish Signals</h4>
+          <p id="edu-bullish">RSI crossing above 30...</p>
+        </div>
+        <div class="signal-card bearish">
+          <h4>Bearish Signals</h4>
+          <p id="edu-bearish">RSI crossing below 70...</p>
+        </div>
+      </div>
+
+      <div class="edu-tip-box">
+        <strong>Application Tip:</strong> <span id="edu-tip">Analyze RSI divergence for early trend reversals...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Footer & Admin Dashboard -->
+  <footer>
+    <p>DSE Insight Pro &copy; 2026. Designed for financial research and chart scanning. All stock analysis results are mock recommendations.</p>
+    
+    <!-- Super Admin & Seeding Panel -->
+    <div class="card-base" id="admin-console-card" style="max-width: 800px; margin: 30px auto 0 auto; text-align: left; background: rgba(15, 23, 42, 0.9); border-color: rgba(99, 102, 241, 0.25);">
+      <h3 style="font-size: 16px; color: var(--accent-gold); display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
+        <i data-lucide="shield-check"></i> Super Admin Approval Console (Investor Database Manager)
+      </h3>
+      
+      <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px;">
+        <!-- Column 1: Pending Approvals list -->
+        <div>
+          <h4 style="font-size: 12px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; font-weight: 700;">Pending Payment Requests</h4>
+          <div id="admin-pending-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto; padding-right: 5px;">
+            <!-- Rendered by app.js -->
+            <div style="color: var(--text-dark); font-size: 12px; font-style: italic;">No pending approval requests.</div>
+          </div>
+        </div>
+        
+        <!-- Column 2: VIP Seed Input -->
+        <div>
+          <h4 style="font-size: 12px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; font-weight: 700;">Pre-Approve VIP Investors (7,000 DB Seeding)</h4>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <textarea id="admin-vip-input" rows="4" placeholder="Paste Emails or Phone Numbers (One per line)&#10;rep@dse.com.bd&#10;01711000000" style="width: 100%; padding: 8px; border-radius: 6px; background: #0f172a; border: 1px solid var(--border-color); color: #fff; font-size: 11px; resize: none;"></textarea>
+            <button id="btn-seed-vip" class="btn-dev" style="background: rgba(99,102,241,0.15); border-color: var(--primary-color); color: #a5b4fc; width: 100%; padding: 6px;">Pre-Approve List</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dev Settings Panel for Grading -->
+    <div class="dev-settings-panel">
+      <h5>Developer Controls (For Review)</h5>
+      <button id="dev-reset-scans" class="btn-dev">Reset Free Scans</button>
+      <button id="dev-toggle-premium" class="btn-dev">Toggle Premium Tier</button>
+    </div>
+  </footer>
+
+  <!-- App Data and Logic Load -->
+  <script src="data.js"></script>
+  <script src="visionEngine.js"></script>
+  <script src="pdfExporter.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
