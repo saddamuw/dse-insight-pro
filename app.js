@@ -674,13 +674,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function simulatePresetUpload(fileName) {
-    const mockFile = {
-      name: fileName,
-      size: 1024,
-      type: "image/jpeg"
-    };
-    handleFileSelected(mockFile);
+  // --- Dual-Language Render Helper ---
+  function renderDualLang(element, engText, bngText) {
+    if (!element) return;
+    if (!bngText) {
+      element.innerHTML = `<div class="eng-val">${engText || ""}</div>`;
+      return;
+    }
+    element.innerHTML = `
+      <div class="eng-val">${engText || ""}</div>
+      <div class="bng-val" style="margin-top: 5px; color: #a5b4fc; font-size: 13.5px; font-style: italic; font-weight: 400; font-family: 'Inter', sans-serif; line-height: 1.45; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 4px;">${bngText}</div>
+    `;
   }
 
   // --- Display Results ---
