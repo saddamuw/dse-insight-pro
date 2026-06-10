@@ -22,21 +22,20 @@ const VisionEngine = {
       };
     }
 
-    // 2. If Real AI is toggled and we have an API key, call OpenRouter Vision API
-    if (useRealAI && apiKey) {
-      try {
-        return await this.callOpenRouterVision(base64Data, apiKey);
-      } catch (err) {
-        console.error("OpenRouter API failed, falling back to simulated analysis:", err);
-        // Fall back to simulation but mark it
-        const simulated = await this.simulateAnalysis(file, base64Data);
+    // 2. Attempt Live AI Vision Scan (tries Vercel serverless backend first, then client key direct fetch)
+    try {
+      return await this.callOpenRouterVision(base64Data, apiKey);
+    } catch (err) {
+      console.warn("Live AI Vision Scan failed, falling back to simulated analysis:", err);
+      // Fall back to simulation
+      const simulated = await this.simulateAnalysis(file, base64Data);
+      
+      // If the user explicitly toggled Real AI or entered a key, show them the error alert
+      if (useRealAI || apiKey) {
         simulated.error = `API Error: ${err.message}. Showing simulated analysis instead.`;
-        return simulated;
       }
+      return simulated;
     }
-
-    // 3. Otherwise, run simulated fallback scanner
-    return await this.simulateAnalysis(file, base64Data);
   },
 
   // Call OpenRouter Gemini 2.5 Flash Vision model
