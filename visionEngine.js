@@ -68,7 +68,7 @@ const VisionEngine = {
     }
 
     // 2. Direct Fallback: Client-side fetch query (for local dev or when Vercel env key is not configured)
-    const cleanKey = (apiKey || "").trim().replace(/^["']|["']$/g, "");
+    const cleanKey = (apiKey || "").trim().split(/\s+/)[0].replace(/^["']|["']$/g, "");
     if (!cleanKey) {
       throw new Error("API Key is not configured (neither on Vercel environment variables nor in the client settings).");
     }

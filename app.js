@@ -645,7 +645,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const result = await VisionEngine.analyzeScreenshot(file, {
         useRealAI: useRealAI,
-        apiKey: apiKey.trim().replace(/^["']|["']$/g, "")
+        apiKey: apiKey.trim().split(/\s+/)[0].replace(/^["']|["']$/g, "")
       });
 
       // Increment counts on free/pro tiers
