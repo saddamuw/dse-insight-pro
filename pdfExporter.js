@@ -27,7 +27,7 @@ const PDFExporter = {
           
           @page {
             size: A4;
-            margin: 15mm 15mm 15mm 15mm;
+            margin: 10mm 10mm 10mm 10mm;
           }
           
           body {
@@ -36,15 +36,16 @@ const PDFExporter = {
             margin: 0;
             padding: 0;
             background: #ffffff;
-            line-height: 1.5;
+            line-height: 1.4;
+            font-size: 11.5px;
           }
           .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #0052cc;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
           }
           .logo-area {
             display: flex;
@@ -72,12 +73,12 @@ const PDFExporter = {
             color: #666;
           }
           .report-title {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background: #f4f6fa;
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 6px;
             border-left: 4px solid #0052cc;
           }
@@ -85,27 +86,27 @@ const PDFExporter = {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
           }
           .card {
             border: 1px solid #e1e4ea;
             border-radius: 8px;
-            padding: 15px;
+            padding: 10px;
             background: #fafbfc;
           }
           .card h3 {
             margin-top: 0;
-            font-size: 14px;
+            font-size: 12px;
             color: #0052cc;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 1px solid #e1e4ea;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
+            padding-bottom: 6px;
+            margin-bottom: 8px;
           }
           .card p {
-            margin: 6px 0;
-            font-size: 13px;
+            margin: 4px 0;
+            font-size: 11px;
           }
           .indicator-val {
             font-weight: 600;
@@ -115,33 +116,33 @@ const PDFExporter = {
             text-align: center;
             border: 1px solid #e1e4ea;
             border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 25px;
+            padding: 8px;
+            margin-bottom: 15px;
             background: #fafbfc;
           }
           .screenshot-box img {
             max-width: 100%;
-            max-height: 250px;
+            max-height: 180px;
             border-radius: 4px;
             object-fit: contain;
           }
           .section {
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             page-break-inside: avoid;
           }
           .section-title {
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 700;
             color: #333;
             border-bottom: 1px solid #ddd;
-            padding-bottom: 6px;
-            margin-bottom: 12px;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
           }
           .highlight {
-            padding: 10px;
+            padding: 8px 10px;
             border-radius: 6px;
-            font-size: 13px;
-            margin-bottom: 15px;
+            font-size: 11px;
+            margin-bottom: 10px;
           }
           .highlight.bullish {
             background: #e6f7ed;
@@ -159,11 +160,11 @@ const PDFExporter = {
             color: #383d41;
           }
           .footer {
-            margin-top: 40px;
+            margin-top: 25px;
             border-top: 1px solid #e1e4ea;
-            padding-top: 15px;
+            padding-top: 10px;
             text-align: center;
-            font-size: 11px;
+            font-size: 10px;
             color: #888;
           }
           @media print {
@@ -182,8 +183,8 @@ const PDFExporter = {
             align-items: center;
             border: 1px solid #e1e4ea;
             border-radius: 8px;
-            padding: 12px 18px;
-            margin-bottom: 20px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
             background: #fafbfc;
           }
           .pdf-rec-buy {
@@ -213,7 +214,7 @@ const PDFExporter = {
             gap: 2px;
           }
           .pdf-rec-label {
-            font-size: 10px;
+            font-size: 9px;
             color: #666;
             text-transform: uppercase;
             font-weight: 700;
@@ -225,7 +226,7 @@ const PDFExporter = {
             gap: 6px;
           }
           .pdf-rec-val {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 800;
           }
           .pdf-rec-buy .pdf-rec-val { color: #15803d; }
@@ -235,7 +236,7 @@ const PDFExporter = {
           .pdf-rec-neutral .pdf-rec-val { color: #475569; }
 
           .pdf-rec-val-bn {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             color: #555;
             font-style: italic;
@@ -245,14 +246,14 @@ const PDFExporter = {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 4px;
-            min-width: 150px;
+            gap: 2px;
+            min-width: 120px;
           }
           .pdf-confidence-header {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
             color: #666;
             text-transform: uppercase;
@@ -383,11 +384,20 @@ const PDFExporter = {
         </div>
 
         <script>
-          // Auto trigger print and close window after completion
-          window.onload = function() {
-            setTimeout(function() {
-              window.print();
-            }, 500);
+          // Wait for all fonts (including Google Fonts) to load before printing
+          if (document.fonts) {
+            document.fonts.ready.then(function() {
+              setTimeout(function() {
+                window.print();
+              }, 250);
+            });
+          } else {
+            // Fallback for older browsers
+            window.onload = function() {
+              setTimeout(function() {
+                window.print();
+              }, 1000);
+            };
           }
         </script>
       </body>
