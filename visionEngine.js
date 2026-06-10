@@ -73,7 +73,7 @@ const VisionEngine = {
     }
 
     console.log("Using client-side direct API query with the provided API key.");
-    const isGoogleKey = apiKey.startsWith("AIzaSy");
+    const isGoogleKey = apiKey.startsWith("AIzaSy") || apiKey.startsWith("AQ.");
     const promptText = `You are a professional financial technical analyst. Analyze this Dhaka Stock Exchange (DSE) stock chart screenshot. Identify:
 1. Stock Ticker or Company name (must match a DSE stock or represent a real stock on DSE).
 2. Current price trend and patterns.
