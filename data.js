@@ -19,7 +19,6 @@ const DSE_DATABASE = {
     { ticker: "MJLBD", name: "MJL Bangladesh PLC.", sector: "Fuel & Power", price: 82.1, change: 0.7, pe: 10.2, rsi: 52, trend: "Neutral" }
   ],
 
-  // Pre-configured analysis matching the screenshots in the assets folder
   presetAnalyses: {
     "Square Pharma .jpg": {
       ticker: "SQURPHARMA",
@@ -27,6 +26,9 @@ const DSE_DATABASE = {
       platform: "StockNow / TradingView",
       indicators: ["RSI (14)", "MACD (12, 26, 9)", "EMA 50", "EMA 200", "Volume"],
       analysis: {
+        recommendation: "BUY",
+        recommendationBn: "ক্রয়",
+        confidence: 8,
         trend: "Strong accumulation near the BDT 210-212 support zone. Short-term momentum is shifting positive.",
         trendBn: "BDT ২১০-২১২ সাপোর্ট জোনের কাছাকাছি শক্তিশালী ক্রয়ের প্রবণতা। স্বল্পমেয়াদী গতিবেগ ইতিবাচক হচ্ছে।",
         rsi: { 
@@ -57,6 +59,9 @@ const DSE_DATABASE = {
       platform: "AmarStock",
       indicators: ["RSI (14)", "Volume Rate of Change", "Support/Resistance Grid"],
       analysis: {
+        recommendation: "AVOID",
+        recommendationBn: "পরিহার",
+        confidence: 9,
         trend: "Highly volatile vertical price spike on speculative volumes. Parabolic rally shows signs of exhaustion.",
         trendBn: "উচ্চ মাত্রার উদ্বায়ী এবং জল্পনা-কল্পনাভিত্তিক ট্রেডিং ভলিউমের কারণে উল্লম্ব মূল্য বৃদ্ধি। প্যারাবোলিক র্যালি ক্লান্তি বা অবসাদের লক্ষণ দেখাচ্ছে।",
         rsi: { 
@@ -78,7 +83,7 @@ const DSE_DATABASE = {
         candlestickPattern: "Shooting Star/Inverted Hammer close to the day's high, suggesting profit booking at elevated levels.",
         candlestickPatternBn: "দিনের সর্বোচ্চ দরের কাছাকাছি শুটিং স্টার বা ইনভার্টেড হ্যামার ক্যান্ডেলস্টিক প্যাটার্ন তৈরি হয়েছে, যা প্রফিট বুকিংয়ের ইঙ্গিত দেয়।",
         outlook: "Bearish / Highly Risky. Avoid fresh entries at current levels. Expect a correction back to the BDT 130-135 support zone.",
-        outlookBn: "বেয়ারিশ / উচ্চ ঝুঁকিপূর্ণ। বর্তমান মূল্যে নতুন করে প্রবেশ করা এড়িয়ে চলুন। মূল্য সংশোধন হয়ে ১৩০-১৩৫ বিডিটি সাপোর্ট জোনে ফিরে আসার সম্ভাবনা রয়েছে।"
+        outlookBn: "বেয়ারিশ / উচ্চ ঝুঁকিপূর্ণ। বর্তমান মূল্যে নতুন করে প্রবেশ করা এড়িয়ে চলুন। মূল্য সংশোধন হয়ে ১৩০-১৫৫ বিডিটি সাপোর্ট জোনে ফিরে আসার সম্ভাবনা রয়েছে।"
       }
     },
     "Loser 01.jpg": {
@@ -87,6 +92,9 @@ const DSE_DATABASE = {
       platform: "DSE Portal Chart",
       indicators: ["EMA 50", "EMA 100", "RSI (14)", "Volume"],
       analysis: {
+        recommendation: "SELL",
+        recommendationBn: "বিক্রয়",
+        confidence: 8,
         trend: "Definitive downtrend marked by lower highs and lower lows. Trading below all major exponential moving averages.",
         trendBn: "স্পষ্ট দরপতন বা ডাউনট্রেন্ড, যা প্রতিটি ধাপে আগের চেয়ে কম সর্বোচ্চ এবং সর্বনিম্ন মূল্য দ্বারা চিহ্নিত। শেয়ারটি সমস্ত প্রধান মুভিং অ্যাভারেজের নিচে ট্রেড করছে।",
         rsi: { 
@@ -117,6 +125,9 @@ const DSE_DATABASE = {
       platform: "StockNow Dashboard",
       indicators: ["RSI (14)", "Bollinger Bands (20, 2)", "Volume"],
       analysis: {
+        recommendation: "HOLD",
+        recommendationBn: "হোল্ড",
+        confidence: 7,
         trend: "Tight trading range (flat) near key support, signifying low market interest and consolidation.",
         trendBn: "মূল সাপোর্টের কাছাকাছি সংকীর্ণ ট্রেডিং রেঞ্জ (ফ্ল্যাট), যা কম বাজার আগ্রহ এবং কনসোলিডেশন নির্দেশ করে।",
         rsi: { 
@@ -147,6 +158,9 @@ const DSE_DATABASE = {
       platform: "TradingView DSE",
       indicators: ["EMA 20", "EMA 50", "RSI (14)", "MACD"],
       analysis: {
+        recommendation: "HOLD",
+        recommendationBn: "হোল্ড",
+        confidence: 8,
         trend: "Moderate pull-back from peak. Finding dynamic support near the EMA 50 line.",
         trendBn: "সর্বোচ্চ দর থেকে মাঝারি ধরনের পুল-ব্যাক বা মূল্য সংশোধন। EMA ৫০ লাইনের কাছাকাছি ডায়নামিক সাপোর্ট খুঁজে পাচ্ছে।",
         rsi: { 
@@ -177,6 +191,9 @@ const DSE_DATABASE = {
       platform: "StockNow Charts",
       indicators: ["RSI (14)", "MACD", "Volume Rate of Change", "Support/Resistance"],
       analysis: {
+        recommendation: "BUY",
+        recommendationBn: "ক্রয়",
+        confidence: 9,
         trend: "Steady uptrend along a rising channel. Institutional buy support visible on rising volumes.",
         trendBn: "একটি ক্রমবর্ধমান চ্যানেলের মধ্য দিয়ে ক্রমাগত ঊর্ধ্বমুখী গতিপথ। বর্ধিত ভলিউমে প্রাতিষ্ঠানিক ক্রয়ের সমর্থন দৃশ্যমান।",
         rsi: { 

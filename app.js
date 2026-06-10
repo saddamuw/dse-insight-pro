@@ -702,6 +702,43 @@ document.addEventListener("DOMContentLoaded", () => {
     resultPlatform.textContent = data.platform || "DSE Stock Charts";
     engineBadge.textContent = data.engine || "Analysis Engine";
 
+    // Render Recommendation & Confidence Banner
+    const recContainer = document.getElementById("recommendation-badge-container");
+    if (recContainer) {
+      const rec = data.analysis.recommendation || "NEUTRAL";
+      const recBn = data.analysis.recommendationBn || "নিরপেক্ষ";
+      const conf = data.analysis.confidence || 7;
+      const recClass = `rec-${rec.toLowerCase()}`;
+
+      recContainer.className = `recommendation-banner ${recClass}`;
+      recContainer.innerHTML = `
+        <div class="rec-badge-section">
+          <span class="rec-label">AI Analysis Signal / এআই সিগন্যাল</span>
+          <div class="rec-value-container">
+            <span class="rec-badge-val">${rec}</span>
+            <span class="rec-badge-val-bn">/ ${recBn}</span>
+          </div>
+        </div>
+        <div class="confidence-section">
+          <div class="confidence-header">
+            <span>Confidence / আস্থা</span>
+            <span class="confidence-score-number">${conf}/10</span>
+          </div>
+          <div class="confidence-meter-bg">
+            <div class="confidence-meter-fill" id="conf-meter-fill"></div>
+          </div>
+        </div>
+      `;
+
+      // Trigger width animation on next repaint
+      setTimeout(() => {
+        const fill = document.getElementById("conf-meter-fill");
+        if (fill) {
+          fill.style.width = `${conf * 10}%`;
+        }
+      }, 50);
+    }
+
     // Detailed metrics with English & Bengali side-by-side / stacked
     renderDualLang(resultTrend, data.analysis.trend, data.analysis.trendBn);
     

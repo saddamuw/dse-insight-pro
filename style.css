@@ -1205,3 +1205,141 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+/* Recommendation & Confidence Score Banner */
+.recommendation-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px 20px;
+  box-shadow: var(--shadow-main);
+  backdrop-filter: var(--glass-filter);
+  margin-bottom: 20px;
+  transition: var(--transition);
+}
+
+.rec-badge-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rec-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.rec-value-container {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.rec-badge-val {
+  font-size: 26px;
+  font-weight: 900;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.rec-badge-val-bn {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}
+
+/* Color Categories */
+.rec-buy .rec-badge-val {
+  color: #10b981;
+  text-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+}
+.rec-buy {
+  border-left: 4px solid #10b981;
+}
+
+.rec-sell .rec-badge-val {
+  color: #f43f5e;
+  text-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+}
+.rec-sell {
+  border-left: 4px solid #f43f5e;
+}
+
+.rec-hold .rec-badge-val {
+  color: #f59e0b;
+  text-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+.rec-hold {
+  border-left: 4px solid #f59e0b;
+}
+
+.rec-avoid .rec-badge-val {
+  color: #ec4899;
+  text-shadow: 0 0 15px rgba(236, 72, 153, 0.4);
+}
+.rec-avoid {
+  border-left: 4px solid #ec4899;
+}
+
+.rec-neutral .rec-badge-val {
+  color: #94a3b8;
+  text-shadow: 0 0 15px rgba(148, 163, 184, 0.4);
+}
+.rec-neutral {
+  border-left: 4px solid #94a3b8;
+}
+
+/* Confidence Score display */
+.confidence-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 145px;
+}
+
+.confidence-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.confidence-score-number {
+  color: #a5b4fc;
+  font-weight: bold;
+}
+
+.confidence-meter-bg {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 99px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.confidence-meter-fill {
+  height: 100%;
+  border-radius: 99px;
+  width: 0%; /* Settled dynamically by script */
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rec-buy .confidence-meter-fill { background: linear-gradient(90deg, #047857, #10b981); }
+.rec-sell .confidence-meter-fill { background: linear-gradient(90deg, #be123c, #f43f5e); }
+.rec-hold .confidence-meter-fill { background: linear-gradient(90deg, #b45309, #f59e0b); }
+.rec-avoid .confidence-meter-fill { background: linear-gradient(90deg, #be185d, #ec4899); }
+.rec-neutral .confidence-meter-fill { background: linear-gradient(90deg, #475569, #94a3b8); }

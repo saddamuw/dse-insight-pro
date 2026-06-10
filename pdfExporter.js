@@ -12,6 +12,10 @@ const PDFExporter = {
     
     // Inject styles and html structure
     const dateStr = new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" });
+    const rec = (analysisData.analysis && analysisData.analysis.recommendation) || "NEUTRAL";
+    const recBn = (analysisData.analysis && analysisData.analysis.recommendationBn) || "নিরপেক্ষ";
+    const conf = (analysisData.analysis && analysisData.analysis.confidence) || 7;
+    const recClass = rec.toLowerCase();
     
     printWindow.document.write(`
       <!DOCTYPE html>
@@ -163,6 +167,109 @@ const PDFExporter = {
               display: none;
             }
           }
+          
+          /* Recommendation & Confidence Banner */
+          .pdf-rec-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e1e4ea;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin-bottom: 20px;
+            background: #fafbfc;
+          }
+          .pdf-rec-buy {
+            border-left: 5px solid #10b981;
+            background: #f0fdf4;
+          }
+          .pdf-rec-sell {
+            border-left: 5px solid #f43f5e;
+            background: #fff1f2;
+          }
+          .pdf-rec-hold {
+            border-left: 5px solid #f59e0b;
+            background: #fffbeb;
+          }
+          .pdf-rec-avoid {
+            border-left: 5px solid #ec4899;
+            background: #fdf2f8;
+          }
+          .pdf-rec-neutral {
+            border-left: 5px solid #64748b;
+            background: #f8fafc;
+          }
+          
+          .pdf-rec-badge-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+          }
+          .pdf-rec-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+          }
+          .pdf-rec-val-container {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+          }
+          .pdf-rec-val {
+            font-size: 22px;
+            font-weight: 800;
+          }
+          .pdf-rec-buy .pdf-rec-val { color: #15803d; }
+          .pdf-rec-sell .pdf-rec-val { color: #b91c1c; }
+          .pdf-rec-hold .pdf-rec-val { color: #b45309; }
+          .pdf-rec-avoid .pdf-rec-val { color: #be185d; }
+          .pdf-rec-neutral .pdf-rec-val { color: #475569; }
+
+          .pdf-rec-val-bn {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            font-style: italic;
+          }
+          
+          .pdf-confidence-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            min-width: 150px;
+          }
+          .pdf-confidence-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 10px;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+          }
+          .pdf-confidence-score-number {
+            color: #4f46e5;
+            font-weight: bold;
+          }
+          .pdf-confidence-meter-bg {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 99px;
+            overflow: hidden;
+          }
+          .pdf-confidence-meter-fill {
+            height: 100%;
+            border-radius: 99px;
+          }
+          .pdf-rec-buy .pdf-confidence-meter-fill { background: #10b981; }
+          .pdf-rec-sell .pdf-confidence-meter-fill { background: #f43f5e; }
+          .pdf-rec-hold .pdf-confidence-meter-fill { background: #f59e0b; }
+          .pdf-rec-avoid .pdf-confidence-meter-fill { background: #ec4899; }
+          .pdf-rec-neutral .pdf-confidence-meter-fill { background: #64748b; }
         </style>
       </head>
       <body>
@@ -183,6 +290,25 @@ const PDFExporter = {
 
         <div class="report-title">
           Technical Analysis Report: <strong>${analysisData.ticker}</strong> (${analysisData.name})
+        </div>
+
+        <div class="pdf-rec-banner pdf-rec-${recClass}">
+          <div class="pdf-rec-badge-section">
+            <span class="pdf-rec-label">AI Analysis Signal / এআই সিগন্যাল</span>
+            <div class="pdf-rec-val-container">
+              <span class="pdf-rec-val">${rec}</span>
+              <span class="pdf-rec-val-bn">/ ${recBn}</span>
+            </div>
+          </div>
+          <div class="pdf-confidence-section">
+            <div class="pdf-confidence-header">
+              <span>Confidence / আস্থা</span>
+              <span class="pdf-confidence-score-number">${conf}/10</span>
+            </div>
+            <div class="pdf-confidence-meter-bg">
+              <div class="pdf-confidence-meter-fill" style="width: ${conf * 10}%;"></div>
+            </div>
+          </div>
         </div>
 
         <div class="grid">

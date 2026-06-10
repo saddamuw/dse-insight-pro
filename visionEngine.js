@@ -88,6 +88,9 @@ You MUST respond strictly in a valid JSON object structure like this:
   "platform": "Platform Source (StockNow, AmarStock, DSE Chart, or TradingView)",
   "indicators": ["RSI (14)", "MACD", "EMA 50"],
   "analysis": {
+    "recommendation": "BUY | SELL | HOLD | AVOID | NEUTRAL",
+    "recommendationBn": "ক্রয় | বিক্রয় | হোল্ড | পরিহার | নিরপেক্ষ",
+    "confidence": 8,
     "trend": "Detailed description of the trend in English.",
     "trendBn": "Detailed description of the trend in Bengali.",
     "rsi": { 
@@ -218,26 +221,43 @@ You MUST respond strictly in a valid JSON object structure like this:
     let rsiInterpretation = "RSI is in the neutral zone, indicating a balance between buyer and seller pressure.";
     let rsiInterpretationBn = "আরএসআই নিরপেক্ষ জোনে রয়েছে, যা ক্রেতা ও বিক্রেতার চাপের মধ্যে ভারসাম্য নির্দেশ করে।";
     
+    // Determine recommendation and confidence based on RSI
+    let recommendation = "NEUTRAL";
+    let recommendationBn = "নিরপেক্ষ";
+    let confidence = 7;
+    
     if (rsiVal > 70) {
       trend = "Strong Bullish (Overextended)";
       trendBn = "দৃঢ় বুলিশ বা অতিরিক্ত ক্রয় চাপ";
       rsiInterpretation = `RSI at ${rsiVal} suggests the asset is heavily overbought. Expect a near-term correction.`;
       rsiInterpretationBn = `আরএসআই ${rsiVal} নির্দেশ করে যে সম্পদটি অতিরিক্ত কেনা হয়েছে। নিকটবর্তী সময়ে মূল্য সংশোধনের আশা করুন।`;
+      recommendation = "AVOID";
+      recommendationBn = "পরিহার";
+      confidence = 9;
     } else if (rsiVal < 30) {
       trend = "Strong Bearish (Oversold)";
       trendBn = "দৃঢ় বেয়ারিশ বা অতিরিক্ত বিক্রি চাপ";
       rsiInterpretation = `RSI at ${rsiVal} indicates severe oversold conditions. A relief rally could occur.`;
       rsiInterpretationBn = `আরএসআই ${rsiVal} নির্দেশ করে বাজার অতিরিক্ত বিক্রি হয়েছে। একটি রিলেফ র্যালি বা মূল্য পুনরুদ্ধার ঘটতে পারে।`;
+      recommendation = "BUY";
+      recommendationBn = "ক্রয়";
+      confidence = 8;
     } else if (rsiVal > 55) {
       trend = "Moderate Uptrend";
       trendBn = "মাঝারি ধরনের ঊর্ধ্বমুখী বা আপট্রেন্ড";
       rsiInterpretation = `RSI is at ${rsiVal}, indicating positive bullish momentum building up.`;
       rsiInterpretationBn = `আরএসআই ${rsiVal}-এ রয়েছে, যা ইতিবাচক বুলিশ মোমেন্টাম গড়ে ওঠার নির্দেশক।`;
+      recommendation = "BUY";
+      recommendationBn = "ক্রয়";
+      confidence = 7;
     } else if (rsiVal < 45) {
       trend = "Moderate Downtrend";
       trendBn = "মাঝারি ধরনের নিম্নমুখী বা ডাউনট্রেন্ড";
       rsiInterpretation = `RSI is at ${rsiVal}, reflecting weak relative strength and seller advantage.`;
       rsiInterpretationBn = `আরএসআই ${rsiVal}-এ রয়েছে, যা দুর্বল আপেক্ষিক শক্তি এবং বিক্রেতাদের আধিপত্য নির্দেশ করে।`;
+      recommendation = "SELL";
+      recommendationBn = "বিক্রয়";
+      confidence = 8;
     }
 
     const basePrice = security.price;
@@ -273,6 +293,9 @@ You MUST respond strictly in a valid JSON object structure like this:
       platform: ["StockNow Charts", "AmarStock Portal", "DSE Advanced Charts"][Math.floor(Math.random() * 3)],
       indicators: ["RSI (14)", "MACD (12, 26, 9)", "EMA 50", "EMA 200", "Volume"],
       analysis: {
+        recommendation: recommendation,
+        recommendationBn: recommendationBn,
+        confidence: confidence,
         trend: `${trend}. Price action displays active consolidation near BDT ${basePrice}.`,
         trendBn: `${trendBn}। প্রাইস অ্যাকশন বর্তমানে BDT ${basePrice} এর কাছাকাছি কনসোলিডেট করছে।`,
         rsi: {

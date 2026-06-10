@@ -33,6 +33,9 @@ You MUST respond strictly in a valid JSON object structure like this:
   "platform": "Platform Source (StockNow, AmarStock, DSE Chart, or TradingView)",
   "indicators": ["RSI (14)", "MACD", "EMA 50"],
   "analysis": {
+    "recommendation": "BUY | SELL | HOLD | AVOID | NEUTRAL",
+    "recommendationBn": "ক্রয় | বিক্রয় | হোল্ড | পরিহার | নিরপেক্ষ",
+    "confidence": 8,
     "trend": "Detailed description of the trend in English.",
     "trendBn": "Detailed description of the trend in Bengali.",
     "rsi": { 
