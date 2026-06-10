@@ -23,12 +23,18 @@ const PDFExporter = {
       <head>
         <title>DSE Insight Pro - Technical Report: ${analysisData.ticker}</title>
         <style>
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@300;400;600;700&display=swap');
+          
+          @page {
+            size: A4;
+            margin: 15mm 15mm 15mm 15mm;
+          }
+          
           body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Hind Siliguri', sans-serif;
             color: #1a1a1a;
             margin: 0;
-            padding: 30px;
+            padding: 0;
             background: #ffffff;
             line-height: 1.5;
           }
@@ -115,12 +121,13 @@ const PDFExporter = {
           }
           .screenshot-box img {
             max-width: 100%;
-            max-height: 350px;
+            max-height: 250px;
             border-radius: 4px;
             object-fit: contain;
           }
           .section {
             margin-bottom: 25px;
+            page-break-inside: avoid;
           }
           .section-title {
             font-size: 15px;
