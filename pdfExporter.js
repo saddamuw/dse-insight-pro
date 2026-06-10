@@ -168,8 +168,12 @@ const PDFExporter = {
       <body>
         <div class="header">
           <div class="logo-area">
-            <span class="logo-text">DSE Insight Pro</span>
-            <span class="logo-badge">Premium Technical Report</span>
+            <img src="assets/Logo.png" alt="Khan AI Lab Logo" style="height: 36px; width: auto; border-radius: 6px; border: 1px solid #e1e4ea; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-right: 5px;">
+            <div>
+              <span class="logo-text" style="display: block; font-size: 20px; line-height: 1.1; margin-bottom: 2px;">DSE Insight Pro</span>
+              <span style="font-size: 10px; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em;">by Khan AI Lab</span>
+            </div>
+            <span class="logo-badge" style="margin-left: 15px;">Premium Technical Report</span>
           </div>
           <div class="meta-info">
             Generated: ${dateStr} (BST)<br>
@@ -241,7 +245,8 @@ const PDFExporter = {
         </div>
 
         <div class="footer">
-          DSE Insight Pro &copy; 2026. This report is for educational and analytical purposes only. Trading in the Dhaka Stock Exchange involves high risk. Consult a registered financial analyst before investing.
+          <strong>DSE Insight Pro &copy; 2026 · A Product of <a href="https://khanailab.vercel.app" target="_blank" rel="noopener" style="color: #0052cc; text-decoration: none; font-weight: 600;">Khan AI Lab</a> (khanailab.vercel.app)</strong><br>
+          This report is for educational and analytical purposes only. Trading in the Dhaka Stock Exchange involves high risk. Consult a registered financial analyst before investing.
         </div>
 
         <script>

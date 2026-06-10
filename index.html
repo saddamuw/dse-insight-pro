@@ -16,10 +16,12 @@
   <!-- App Header -->
   <header>
     <div class="logo-container">
-      <div class="logo-icon">D</div>
+      <a href="https://khanailab.vercel.app" target="_blank" rel="noopener" class="logo-link">
+        <img src="assets/Logo.png" alt="Khan AI Lab Logo" class="brand-logo">
+      </a>
       <div class="logo-text">
         <h1>DSE Insight Pro</h1>
-        <p>AI TECHNICAL SCREENSHOT ANALYST</p>
+        <p>AI TECHNICAL SCREENSHOT ANALYST · by <a href="https://khanailab.vercel.app" target="_blank" rel="noopener" class="brand-link">Khan AI Lab</a></p>
       </div>
     </div>
     
@@ -244,6 +246,13 @@
     <div class="modal-content" style="max-width: 600px;">
       <button id="close-paywall" class="modal-close"><i data-lucide="x"></i></button>
       
+      <div style="text-align: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+        <a href="https://khanailab.vercel.app" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; transition: var(--transition);" class="modal-brand-link">
+          <img src="assets/Logo.png" alt="Khan AI Lab Logo" style="height: 20px; width: auto; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05);">
+          A Product of Khan AI Lab
+        </a>
+      </div>
+      
       <!-- STEP 1: REGISTRATION VIEW -->
       <div id="auth-register-view">
         <div class="paywall-header">
@@ -380,7 +389,8 @@
 
   <!-- App Footer & Admin Dashboard -->
   <footer>
-    <p>DSE Insight Pro &copy; 2026. Designed for financial research and chart scanning. All stock analysis results are mock recommendations.</p>
+    <p>DSE Insight Pro &copy; 2026 · A Product of <a href="https://khanailab.vercel.app" target="_blank" rel="noopener" class="footer-brand-link">Khan AI Lab</a></p>
+    <p style="font-size: 11px; margin-top: 6px; color: var(--text-dark);">Website: <a href="https://khanailab.vercel.app" target="_blank" rel="noopener" style="color: var(--text-muted); text-decoration: none;">khanailab.vercel.app</a> | Designed for financial research. Mock recommendations.</p>
     
     <!-- Super Admin & Seeding Panel -->
     <div class="card-base" id="admin-console-card" style="max-width: 800px; margin: 30px auto 0 auto; text-align: left; background: rgba(15, 23, 42, 0.9); border-color: rgba(99, 102, 241, 0.25);">

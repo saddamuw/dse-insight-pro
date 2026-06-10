@@ -73,21 +73,28 @@ header {
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
-.logo-icon {
-  background: var(--primary-glow);
-  color: #fff;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+.logo-link {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 800;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  text-decoration: none;
+}
+
+.brand-logo {
+  height: 44px;
+  width: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: var(--transition);
+}
+
+.brand-logo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+  border-color: rgba(99, 102, 241, 0.4);
 }
 
 .logo-text h1 {
@@ -102,6 +109,46 @@ header {
   font-size: 11px;
   color: var(--text-muted);
   letter-spacing: 0.05em;
+}
+
+.brand-link {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px dashed rgba(59, 130, 246, 0.4);
+  transition: var(--transition);
+}
+
+.brand-link:hover {
+  color: #60a5fa;
+  border-bottom-color: #60a5fa;
+}
+
+.footer-brand-link {
+  color: var(--accent-gold);
+  text-decoration: none;
+  font-weight: 700;
+  border-bottom: 1px dashed rgba(245, 158, 11, 0.4);
+  transition: var(--transition);
+}
+
+.footer-brand-link:hover {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+.modal-brand-link:hover {
+  color: #fff !important;
+}
+
+.modal-brand-link img {
+  transition: var(--transition);
+}
+
+.modal-brand-link:hover img {
+  transform: scale(1.08);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
+  border-color: rgba(99, 102, 241, 0.4) !important;
 }
 
 .header-actions {
