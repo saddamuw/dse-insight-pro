@@ -645,7 +645,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const result = await VisionEngine.analyzeScreenshot(file, {
         useRealAI: useRealAI,
-        apiKey: apiKey
+        apiKey: apiKey.trim().replace(/^["']|["']$/g, "")
       });
 
       // Increment counts on free/pro tiers
@@ -672,6 +672,15 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Analysis failed: " + err.message);
       resetToUpload();
     }
+  }
+
+  function simulatePresetUpload(fileName) {
+    const mockFile = {
+      name: fileName,
+      size: 1024,
+      type: "image/jpeg"
+    };
+    handleFileSelected(mockFile);
   }
 
   // --- Dual-Language Render Helper ---

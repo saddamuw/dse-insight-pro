@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     }
 
     // Retrieve API Key securely from Vercel Environment Variables
-    const apiKey = process.env.GEMINI_API_KEY || "";
+    const apiKey = (process.env.GEMINI_API_KEY || "").trim().replace(/^["']|["']$/g, "");
 
     if (!apiKey) {
       return res.status(500).json({ error: 'API Key not configured in Vercel environment variables.' });

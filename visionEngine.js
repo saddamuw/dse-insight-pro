@@ -68,12 +68,13 @@ const VisionEngine = {
     }
 
     // 2. Direct Fallback: Client-side fetch query (for local dev or when Vercel env key is not configured)
-    if (!apiKey) {
+    const cleanKey = (apiKey || "").trim().replace(/^["']|["']$/g, "");
+    if (!cleanKey) {
       throw new Error("API Key is not configured (neither on Vercel environment variables nor in the client settings).");
     }
 
     console.log("Using client-side direct API query with the provided API key.");
-    const isGoogleKey = apiKey.startsWith("AIzaSy") || apiKey.startsWith("AQ.");
+    const isGoogleKey = cleanKey.startsWith("AIzaSy") || cleanKey.startsWith("AQ.");
     const promptText = `You are a professional financial technical analyst. Analyze this Dhaka Stock Exchange (DSE) stock chart screenshot. Identify:
 1. Stock Ticker or Company name (must match a DSE stock or represent a real stock on DSE).
 2. Current price trend and patterns.
@@ -120,7 +121,7 @@ You MUST respond strictly in a valid JSON object structure like this:
       const base64Image = base64Data.split(",")[1] || base64Data;
       const mimeType = base64Data.split(";")[0].split(":")[1] || "image/jpeg";
 
-      const directResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+      const directResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${cleanKey}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -163,7 +164,7 @@ You MUST respond strictly in a valid JSON object structure like this:
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`,
+          "Authorization": `Bearer ${cleanKey}`,
           "HTTP-Referer": "https://dseinsightpro.com",
           "X-Title": "DSE Insight Pro"
         },
