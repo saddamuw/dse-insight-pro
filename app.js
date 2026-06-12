@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let proScanCount = parseInt(localStorage.getItem("dse_pro_scan_count")) || 0;
   let proLastScanDate = localStorage.getItem("dse_pro_last_scan_date") || "";
   let activeAnalysis = null;
-  let useRealAI = localStorage.getItem("dse_use_real_ai") === "true";
+  let useRealAI = localStorage.getItem("dse_use_real_ai") !== "false";
   let apiKey = localStorage.getItem("dse_api_key") || DSE_DATABASE.defaultApiKey;
 
   // --- DOM Elements ---
@@ -141,6 +141,29 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("dse_scan_count", scanCount);
   }
 
+  // --- Admin/Role Visibility Control ---
+  function checkAdminMode() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isAdminParam = urlParams.get("admin") === "true" || urlParams.get("role") === "admin";
+    
+    const adminEmails = [
+      "authorized.rep@dse.com.bd",
+      "representative@multisecurities.com",
+      "mehedul@dsepro.com.bd"
+    ];
+    const isAdminUser = currentUser && adminEmails.includes(currentUser.email.toLowerCase());
+    
+    const showAdmin = isAdminParam || isAdminUser;
+    
+    const adminConsole = document.getElementById("admin-console-card");
+    const devSettings = document.querySelector(".dev-settings-panel");
+    const aiConfig = document.querySelector(".ai-config-panel");
+    
+    if (adminConsole) adminConsole.style.display = showAdmin ? "block" : "none";
+    if (devSettings) devSettings.style.display = showAdmin ? "block" : "none";
+    if (aiConfig) aiConfig.style.display = showAdmin ? "block" : "none";
+  }
+
   // --- Initial Setup & Render ---
   function init() {
     updateSubscriptionUI();
@@ -149,6 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderAdminConsole();
     setupAuthListeners();
     renderUserHeaderArea();
+    checkAdminMode();
   }
 
   // --- Dynamic User Header Display ---
@@ -187,6 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveState();
         updateSubscriptionUI();
         renderUserHeaderArea();
+        checkAdminMode();
         alert("Logged out successfully.");
         resetToUpload();
       });
@@ -401,6 +426,7 @@ document.addEventListener("DOMContentLoaded", () => {
       saveState();
       updateSubscriptionUI();
       renderUserHeaderArea();
+      checkAdminMode();
 
       // Form clear
       registerForm.reset();
@@ -430,6 +456,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveState();
         updateSubscriptionUI();
         renderUserHeaderArea();
+        checkAdminMode();
         loginForm.reset();
         
         alert(`Welcome back, ${user.name}!`);
