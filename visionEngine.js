@@ -41,6 +41,8 @@ const VisionEngine = {
   // Call OpenRouter Gemini 2.5 Flash Vision model
   async callOpenRouterVision(base64Data, apiKey) {
     // 1. Try secure Serverless Route first (ideal for Vercel production deployment)
+    let serverlessActive = false;
+    let serverlessError = null;
     try {
       const response = await fetch("/api/analyze", {
         method: "POST",
@@ -60,8 +62,10 @@ const VisionEngine = {
           engine: "Live Vercel Serverless Vision Engine (Gemini Flash)"
         };
       } else {
+        serverlessActive = true;
         const errorData = await response.json().catch(() => ({}));
-        console.warn(`Serverless API returned error status ${response.status}:`, errorData.error);
+        serverlessError = errorData.error || `HTTP ${response.status}`;
+        console.warn(`Serverless API returned error status ${response.status}:`, serverlessError);
       }
     } catch (err) {
       console.warn("Serverless endpoint failed or not detected:", err);
@@ -70,6 +74,9 @@ const VisionEngine = {
     // 2. Direct Fallback: Client-side fetch query (for local dev or when Vercel env key is not configured)
     const cleanKey = (apiKey || "").trim().split(/\s+/)[0].replace(/^["']|["']$/g, "");
     if (!cleanKey) {
+      if (serverlessActive && serverlessError) {
+        throw new Error(`Serverless API Error: ${serverlessError}`);
+      }
       throw new Error("API Key is not configured (neither on Vercel environment variables nor in the client settings).");
     }
 
@@ -327,6 +334,9 @@ You MUST respond strictly in a valid JSON object structure like this:
 
   // Helper: File to Base64 String
   fileToBase64(file) {
+    if (!(file instanceof Blob)) {
+      return file.name ? `./assets/${file.name}` : "";
+    }
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
