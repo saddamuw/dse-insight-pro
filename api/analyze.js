@@ -33,6 +33,31 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing base64Data parameter' });
     }
 
+    // Route to GCP Cloud Function Proxy (for keyless GCP caching + Vertex AI)
+    const gcpFunctionUrl = (process.env.GCP_FUNCTION_URL || "").trim();
+    if (gcpFunctionUrl) {
+      console.log("Routing request to GCP Cloud Function:", gcpFunctionUrl);
+      try {
+        const gcpResponse = await fetch(gcpFunctionUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ base64Data })
+        });
+
+        if (gcpResponse.ok) {
+          const parsed = await gcpResponse.json();
+          return res.status(200).json(parsed);
+        } else {
+          const errorText = await gcpResponse.text();
+          console.warn(`GCP Cloud Function returned error status ${gcpResponse.status}:`, errorText);
+        }
+      } catch (err) {
+        console.warn("Failed to reach GCP Cloud Function, falling back to direct LLM query:", err);
+      }
+    }
+
     // Retrieve API Key securely from Vercel Environment Variables
     const apiKey = (process.env.GEMINI_API_KEY || "").trim().split(/\s+/)[0].replace(/^["']|["']$/g, "");
 

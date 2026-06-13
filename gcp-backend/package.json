@@ -1,0 +1,10 @@
+{
+  "name": "dse-insight-pro-backend",
+  "version": "1.0.0",
+  "description": "GCP Cloud Function for DSE Insight Pro AI Caching & Vision Analysis",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
+}
