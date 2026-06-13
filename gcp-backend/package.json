@@ -4,7 +4,7 @@
   "description": "GCP Cloud Function for DSE Insight Pro AI Caching & Vision Analysis",
   "main": "index.js",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {}
 }

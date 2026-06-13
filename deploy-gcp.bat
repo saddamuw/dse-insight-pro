@@ -25,9 +25,9 @@ echo Service Account: %SA_EMAIL%
 echo Project: %PROJECT_ID%
 echo.
 
-cd gcp-backend
+cd /d "%~dp0gcp-backend"
 call gcloud functions deploy analyze ^
-  --runtime=nodejs18 ^
+  --runtime=nodejs20 ^
   --trigger-http ^
   --allow-unauthenticated ^
   --entry-point=analyze ^
