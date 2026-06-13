@@ -96,7 +96,7 @@ exports.analyze = async (req, res) => {
     // 2. Self-Configure credentials via local GCP Metadata Server
     let projectId;
     try {
-      const projRes = await fetch("http://metadata.google.internal/computeMetadata/v1/project/project-id", {
+      const projRes = await fetch("http://169.254.169.254/computeMetadata/v1/project/project-id", {
         headers: { "Metadata-Flavor": "Google" }
       });
       projectId = await projRes.text();
@@ -106,16 +106,20 @@ exports.analyze = async (req, res) => {
     }
 
     let accessToken = null;
+    let tokenError = null;
     try {
-      const tokenRes = await fetch("http://metadata.google.internal/computeMetadata/v1/instance/service-account/default/token", {
+      const tokenRes = await fetch("http://169.254.169.254/computeMetadata/v1/instance/service-account/default/token", {
         headers: { "Metadata-Flavor": "Google" }
       });
       if (tokenRes.ok) {
         const tokenData = await tokenRes.json();
         accessToken = tokenData.access_token;
+      } else {
+        tokenError = `Metadata token status: ${tokenRes.status}`;
       }
     } catch (err) {
       // Local fallback if token is passed via dev environment
+      tokenError = `Metadata token exception: ${err.message}`;
       accessToken = process.env.GCP_ACCESS_TOKEN || null;
     }
 
@@ -187,7 +191,11 @@ exports.analyze = async (req, res) => {
     if (!vertexRes.ok) {
       const errText = await vertexRes.text();
       console.error(`Vertex AI API Error response: ${errText}`);
-      return res.status(vertexRes.status).json({ error: `GCP Vertex AI Error: ${errText}` });
+      return res.status(vertexRes.status).json({ 
+        error: `GCP Vertex AI Error: ${errText}`,
+        tokenError: tokenError,
+        projectId: projectId
+      });
     }
 
     const vertexData = await vertexRes.json();
