@@ -22,6 +22,7 @@ const PDFExporter = {
       <html>
       <head>
         <title>DSE Insight Pro - Technical Report: ${analysisData.ticker}</title>
+        <base href="${window.location.origin}${window.location.pathname}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">

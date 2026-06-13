@@ -1,8 +1,30 @@
+function extractJSON(text) {
+  try {
+    const start = text.indexOf('{');
+    const end = text.lastIndexOf('}');
+    if (start !== -1 && end !== -1) {
+      return JSON.parse(text.slice(start, end + 1));
+    }
+    return JSON.parse(text);
+  } catch (e) {
+    throw new Error("Failed to parse clean JSON from LLM: " + e.message);
+  }
+}
+
 // Vercel Serverless Function: /api/analyze
 export default async function handler(req, res) {
   // Guard method
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Verify request origin
+  const origin = req.headers.origin || req.headers.referer || "";
+  const isAllowed = origin.includes("dse-insight-pro.vercel.app") || 
+                    origin.includes("localhost") || 
+                    origin.includes("127.0.0.1");
+  if (!isAllowed) {
+    return res.status(403).json({ error: "Forbidden: Cross-origin request blocked." });
   }
 
   try {
@@ -98,7 +120,7 @@ You MUST respond strictly in a valid JSON object structure like this:
 
       const data = await response.json();
       const contentText = data.candidates[0].content.parts[0].text;
-      const parsed = JSON.parse(contentText);
+      const parsed = extractJSON(contentText);
       return res.status(200).json(parsed);
     } 
     
@@ -142,7 +164,7 @@ You MUST respond strictly in a valid JSON object structure like this:
 
       const data = await response.json();
       const content = data.choices[0].message.content;
-      const parsed = JSON.parse(content);
+      const parsed = extractJSON(content);
       return res.status(200).json(parsed);
     }
   } catch (err) {

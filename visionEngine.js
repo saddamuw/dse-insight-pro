@@ -160,7 +160,7 @@ You MUST respond strictly in a valid JSON object structure like this:
 
       const data = await directResponse.json();
       const contentText = data.candidates[0].content.parts[0].text;
-      const parsed = JSON.parse(contentText);
+      const parsed = this.extractJSON(contentText);
       return {
         ...parsed,
         imageSrc: base64Data,
@@ -205,7 +205,7 @@ You MUST respond strictly in a valid JSON object structure like this:
 
       const data = await directResponse.json();
       const content = data.choices[0].message.content;
-      const parsed = JSON.parse(content);
+      const parsed = this.extractJSON(content);
       
       return {
         ...parsed,
@@ -332,16 +332,53 @@ You MUST respond strictly in a valid JSON object structure like this:
     };
   },
 
-  // Helper: File to Base64 String
+  // Helper: Extract valid JSON from LLM output (handles potential markdown wrappers)
+  extractJSON(text) {
+    try {
+      const start = text.indexOf('{');
+      const end = text.lastIndexOf('}');
+      if (start !== -1 && end !== -1) {
+        return JSON.parse(text.slice(start, end + 1));
+      }
+      return JSON.parse(text);
+    } catch (e) {
+      throw new Error("Failed to parse clean JSON from AI: " + e.message);
+    }
+  },
+
+  // Helper: File to Base64 String with client-side image compression & resizing
   fileToBase64(file) {
     if (!(file instanceof Blob)) {
       return file.name ? `./assets/${file.name}` : "";
     }
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const maxDim = 1200;
+        let w = img.width;
+        let h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.82));
+        URL.revokeObjectURL(img.src);
+      };
+      img.onerror = (err) => {
+        URL.revokeObjectURL(img.src);
+        reject(err);
+      };
+      img.src = URL.createObjectURL(file);
     });
   },
 
