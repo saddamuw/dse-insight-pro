@@ -401,6 +401,11 @@ const PDFExporter = {
             Technical Analysis Report: <strong>${analysisData.ticker}</strong> (${analysisData.name})
           </div>
 
+          <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-size: 10px; line-height: 1.4; text-align: left; font-style: italic; font-weight: 500;">
+            <strong>Educational Purpose Notice:</strong> This AI-generated analysis is strictly for educational, learning, and research purposes. It does not constitute financial or investment advice.
+            <div style="font-family: 'Hind Siliguri', sans-serif; font-size: 9.5px; margin-top: 3px; color: #2563eb;"><strong>শিক্ষামূলক উদ্দেশ্য বিজ্ঞপ্তি:</strong> এই এআই-উত্পন্ন প্রতিবেদনটি শুধুমাত্র শিক্ষামূলক এবং গবেষণার উদ্দেশ্যে প্রস্তুত করা হয়েছে। এটি কোনো আর্থিক বা বিনিয়োগ পরামর্শ নয়।</div>
+          </div>
+
           <div class="pdf-rec-banner pdf-rec-${recClass}">
             <div class="pdf-rec-badge-section">
               <span class="pdf-rec-label">AI Analysis Signal / এআই সিগন্যাল</span>
