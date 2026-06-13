@@ -9,6 +9,10 @@ const PDFExporter = {
 
     // Dynamic compilation of the print report template
     const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      alert("Popup blocker is enabled! Please allow popups for this site in your browser settings to export the PDF report.");
+      return;
+    }
     
     // Inject styles and html structure
     const dateStr = new Date().toLocaleString("en-US", { timeZone: "Asia/Dhaka" });
@@ -426,15 +430,15 @@ const PDFExporter = {
             </div>
             <div class="card">
               <h3>Technical Outlook / টেকনিক্যাল আউটলুক</h3>
-              <div class="highlight ${analysisData.analysis.outlook.toLowerCase().includes('bullish') ? 'bullish' : analysisData.analysis.outlook.toLowerCase().includes('bearish') ? 'bearish' : 'neutral'}">
-                <strong>Sentiment / অনুভূতি:</strong> ${analysisData.analysis.trend}
-                ${analysisData.analysis.trendBn ? `<div class="translation-bn">${analysisData.analysis.trendBn}</div>` : ''}
+              <div class="highlight ${(analysisData.analysis && analysisData.analysis.outlook && analysisData.analysis.outlook.toLowerCase().includes('bullish')) ? 'bullish' : (analysisData.analysis && analysisData.analysis.outlook && analysisData.analysis.outlook.toLowerCase().includes('bearish')) ? 'bearish' : 'neutral'}">
+                <strong>Sentiment / অনুভূতি:</strong> ${(analysisData.analysis && analysisData.analysis.trend) || ""}
+                ${(analysisData.analysis && analysisData.analysis.trendBn) ? `<div class="translation-bn">${analysisData.analysis.trendBn}</div>` : ''}
               </div>
-              <p><strong>Support:</strong> <span class="indicator-val">${analysisData.analysis.supportResistance.support}</span>
-                ${analysisData.analysis.supportResistance.supportBn ? `<div class="translation-bn">${analysisData.analysis.supportResistance.supportBn}</div>` : ''}
+              <p><strong>Support:</strong> <span class="indicator-val">${(analysisData.analysis && analysisData.analysis.supportResistance && analysisData.analysis.supportResistance.support) || ""}</span>
+                ${(analysisData.analysis && analysisData.analysis.supportResistance && analysisData.analysis.supportResistance.supportBn) ? `<div class="translation-bn">${analysisData.analysis.supportResistance.supportBn}</div>` : ''}
               </p>
-              <p><strong>Resistance:</strong> <span class="indicator-val">${analysisData.analysis.supportResistance.resistance}</span>
-                ${analysisData.analysis.supportResistance.resistanceBn ? `<div class="translation-bn">${analysisData.analysis.supportResistance.resistanceBn}</div>` : ''}
+              <p><strong>Resistance:</strong> <span class="indicator-val">${(analysisData.analysis && analysisData.analysis.supportResistance && analysisData.analysis.supportResistance.resistance) || ""}</span>
+                ${(analysisData.analysis && analysisData.analysis.supportResistance && analysisData.analysis.supportResistance.resistanceBn) ? `<div class="translation-bn">${analysisData.analysis.supportResistance.resistanceBn}</div>` : ''}
               </p>
             </div>
           </div>
@@ -444,40 +448,40 @@ const PDFExporter = {
             <img src="${analysisData.imageSrc}" alt="Uploaded Stock Chart">
           </div>
         </div>
-
+          
         <div class="pdf-page">
           <div class="section-title">Deep Technical Breakdown / গভীর টেকনিক্যাল বিশ্লেষণ</div>
           <div class="breakdown-grid">
             <div class="breakdown-card">
               <h4>Trend Analysis / মূল্য প্রবণতা বিশ্লেষণ</h4>
-              <p>${analysisData.analysis.trend}</p>
-              ${analysisData.analysis.trendBn ? `<div class="translation-bn">${analysisData.analysis.trendBn}</div>` : ''}
+              <p>${(analysisData.analysis && analysisData.analysis.trend) || ""}</p>
+              ${(analysisData.analysis && analysisData.analysis.trendBn) ? `<div class="translation-bn">${analysisData.analysis.trendBn}</div>` : ''}
             </div>
             
             <div class="breakdown-card">
               <h4>RSI Interpretation / আরএসআই বিশ্লেষণ</h4>
-              <p>RSI value detected at <span class="indicator-val">${analysisData.analysis.rsi.value}</span>. ${analysisData.analysis.rsi.interpretation}</p>
-              ${analysisData.analysis.rsi.interpretationBn ? `<div class="translation-bn">${analysisData.analysis.rsi.interpretationBn}</div>` : ''}
+              <p>RSI value detected at <span class="indicator-val">${(analysisData.analysis && analysisData.analysis.rsi && analysisData.analysis.rsi.value) || ""}</span>. ${(analysisData.analysis && analysisData.analysis.rsi && analysisData.analysis.rsi.interpretation) || ""}</p>
+              ${(analysisData.analysis && analysisData.analysis.rsi && analysisData.analysis.rsi.interpretationBn) ? `<div class="translation-bn">${analysisData.analysis.rsi.interpretationBn}</div>` : ''}
             </div>
             
             <div class="breakdown-card">
               <h4>MACD Indicator / এমএসিডি সূচক</h4>
-              <p>Detected state: <span class="indicator-val">${analysisData.analysis.macd.value}</span>. ${analysisData.analysis.macd.interpretation}</p>
-              ${analysisData.analysis.macd.interpretationBn ? `<div class="translation-bn">${analysisData.analysis.macd.interpretationBn}</div>` : ''}
+              <p>Detected state: <span class="indicator-val">${(analysisData.analysis && analysisData.analysis.macd && analysisData.analysis.macd.value) || ""}</span>. ${(analysisData.analysis && analysisData.analysis.macd && analysisData.analysis.macd.interpretation) || ""}</p>
+              ${(analysisData.analysis && analysisData.analysis.macd && analysisData.analysis.macd.interpretationBn) ? `<div class="translation-bn">${analysisData.analysis.macd.interpretationBn}</div>` : ''}
             </div>
             
             <div class="breakdown-card">
               <h4>Candlestick Formation / ক্যান্ডেলস্টিক প্যাটার্ন</h4>
-              <p>${analysisData.analysis.candlestickPattern}</p>
-              ${analysisData.analysis.candlestickPatternBn ? `<div class="translation-bn">${analysisData.analysis.candlestickPatternBn}</div>` : ''}
+              <p>${(analysisData.analysis && analysisData.analysis.candlestickPattern) || ""}</p>
+              ${(analysisData.analysis && analysisData.analysis.candlestickPatternBn) ? `<div class="translation-bn">${analysisData.analysis.candlestickPatternBn}</div>` : ''}
             </div>
           </div>
-
+ 
           <div class="section">
             <div class="section-title">Strategic Outlook & Warning Levels / স্ট্র্যাটেজিক আউটলুক ও সতর্কবার্তা</div>
             <p style="font-size: 11px; line-height: 1.45; margin: 0;">
-              ${analysisData.analysis.outlook}
-              ${analysisData.analysis.outlookBn ? `<div class="translation-bn">${analysisData.analysis.outlookBn}</div>` : ''}
+              ${(analysisData.analysis && analysisData.analysis.outlook) || ""}
+              ${(analysisData.analysis && analysisData.analysis.outlookBn) ? `<div class="translation-bn">${analysisData.analysis.outlookBn}</div>` : ''}
             </p>
           </div>
 
