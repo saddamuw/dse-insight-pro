@@ -108,7 +108,7 @@ exports.analyze = async (req, res) => {
     let accessToken = null;
     let tokenError = null;
     try {
-      const tokenRes = await fetch("http://169.254.169.254/computeMetadata/v1/instance/service-account/default/token", {
+      const tokenRes = await fetch("http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token", {
         headers: { "Metadata-Flavor": "Google" }
       });
       if (tokenRes.ok) {
